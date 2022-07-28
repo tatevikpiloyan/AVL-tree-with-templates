@@ -39,7 +39,12 @@ public:
   
   AVL(AVL&& node)
   {
-    
+    data = node.data;
+    left = node.left;
+    right = node.right;
+    balfact = node.balfact;
+    node.left = nullptr;
+    node.right = nullptr;
   }
   
   ~AVL()
