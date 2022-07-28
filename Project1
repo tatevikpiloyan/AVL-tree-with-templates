@@ -1,0 +1,50 @@
+#include <iostream>
+#include <initializer_list>
+
+template <typename T>
+class AVL
+{
+private:
+  T data;
+  AVL* left;
+  AVL* right;
+  int balfact;
+
+public:
+  AVL()
+  {
+    data = {};
+    left = NULL;
+    right = NULL;
+    balfact = {};
+  }
+  
+  AVL(std::initializer_list<T> elem)
+  {
+    for (auto init : elem)
+    {
+      this->insert(init);
+    }
+  }
+  
+  AVL(const AVL& node)
+  {
+    data = node.data;
+    left = new AVL();
+    *left = *node.left;
+    right = new AVL();
+    *right = *node.right;
+    balfact = node.balfact;
+  }
+  
+  AVL(AVL&& node)
+  {
+    
+  }
+  
+  ~AVL()
+  {
+    delete left;
+    delete right;
+  }
+}
