@@ -47,7 +47,6 @@ public:
   }
   
 private:
-
   Node* deep_copy(Node* node_ptr)
   {
     Node* ptr = nullptr;
@@ -55,7 +54,7 @@ private:
     {
       return ptr;
     }
-    ptr = new Node;
+    ptr = new Node();
     ptr->data = node_ptr->data;
     ptr->left = deep_copy(node_ptr->left);
     ptr->right = deep_copy(node_ptr->right);
@@ -63,7 +62,6 @@ private:
   }
 
 public:
-
   void clear(Node* ptr)
   {
     if (ptr == nullptr)
@@ -73,5 +71,6 @@ public:
     clear(ptr->left);
     clear(ptr->right);
     delete ptr;
+    ptr = nullptr;
    }
 };
