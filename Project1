@@ -4,20 +4,21 @@
 template <typename T>
 class AVL
 {
+public:
+  struct Node
+  {
+    T data;
+    Node* left;
+    Node* right;
+    Node* parent;
+    int balfact;
+  };
+    
 private:
-  T data;
-  AVL* left;
-  AVL* right;
-  int balfact;
+  Node* root;
 
 public:
-  AVL()
-  {
-    data = {};
-    left = NULL;
-    right = NULL;
-    balfact = {};
-  }
+  AVL() : root(nullptr) {}
   
   AVL(std::initializer_list<T> elem)
   {
@@ -29,12 +30,7 @@ public:
   
   AVL(const AVL& node)
   {
-    data = node.data;
-    left = new AVL();
-    *left = *node.left;
-    right = new AVL();
-    *right = *node.right;
-    balfact = node.balfact;
+    root = deep_copy(node.root);
   }
   
   AVL(AVL&& node)
@@ -51,5 +47,18 @@ public:
   {
     delete left;
     delete right;
+  }
+  
+private:
+  Node* deep_copy(Node* node_ptr)
+  {
+    Node* ptr = new Node;
+    if (node_ptr == nullptr)
+    {
+      return nullptr;
+    }
+    ptr->data = node_ptr->data;
+    ptr->left = new Node(deep_copy(node_ptr->left));
+    ptr->right = new Node(deep_copy(node_ptr->right));
   }
 };
