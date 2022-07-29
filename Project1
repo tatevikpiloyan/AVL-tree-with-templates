@@ -23,7 +23,7 @@ public:
   {
     for (auto init : elem)
     {
-      this->insert(init);
+      insert(root, init);
     }
   }
   
