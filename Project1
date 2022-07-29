@@ -12,11 +12,8 @@ public:
     Node* right;
     Node* parent;
     int balfact;
-    Node() : data(0), left(nullptr), right(nullptr), parent(nullptr), balfactor(0) {}
-    Node(Node* ptr) : data{0}, left(nullptr), right(nullptr), parent(ptr), balfactor{0} {}
   };
-    
-private:
+  
   Node* root;
 
 public:
@@ -37,30 +34,44 @@ public:
   
   AVL(AVL&& node)
   {
-    data = node.data;
-    left = node.left;
-    right = node.right;
-    balfact = node.balfact;
-    node.left = nullptr;
-    node.right = nullptr;
+    root = node.root;
+    node.root = nullptr;
   }
   
   ~AVL()
   {
-    delete left;
-    delete right;
+    if(root != nullptr)
+    {
+      clear(root);
+    }
   }
   
 private:
+
   Node* deep_copy(Node* node_ptr)
   {
-    Node* ptr = new Node;
+    Node* ptr = nullptr;
     if (node_ptr == nullptr)
     {
-      return nullptr;
+      return ptr;
     }
+    ptr = new Node;
     ptr->data = node_ptr->data;
-    ptr->left = new Node(deep_copy(node_ptr->left));
-    ptr->right = new Node(deep_copy(node_ptr->right));
+    ptr->left = deep_copy(node_ptr->left);
+    ptr->right = deep_copy(node_ptr->right);
+    return ptr;
   }
+
+public:
+
+  void clear(Node* ptr)
+  {
+    if (ptr == nullptr)
+    {
+      return;
+    }
+    clear(ptr->left);
+    clear(ptr->right);
+    delete ptr;
+   }
 };
