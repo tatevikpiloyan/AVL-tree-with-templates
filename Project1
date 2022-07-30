@@ -46,6 +46,36 @@ public:
     }
   }
   
+public:
+  AVL& operator=(const AVL& node)
+    {
+        root = deep_copy(node.root);
+        return *this;
+    }
+
+    AVL& operator=(AVL&& node)
+    {
+        root = node.root;
+        node.root = nullptr;
+        return *this;
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const AVL& obj)
+    {
+        print(os, obj.root);
+        return os;
+    }
+
+    friend bool operator==(const AVL& obj1, const AVL& obj2)
+    {
+        return cmp(obj1.root, obj2.root);
+    }
+
+    friend bool operator!=(const AVL& obj1, const AVL& obj2)
+    {
+        return !(obj1 == obj2);
+    }
+  
 private:
   Node* deep_copy(Node* node_ptr)
   {
@@ -60,6 +90,48 @@ private:
     ptr->right = deep_copy(node_ptr->right);
     return ptr;
   }
+  
+  static void print(std::ostream& os, const Node* root)
+    {
+        if (root == nullptr)
+        {
+            return;
+        }
+        os << root->data << ' ';
+        print(os, root->left);
+        print(os, root->right);
+    }
+    
+    static bool cmp(const Node* obj1, const Node* obj2)
+    {
+        if (obj1 == nullptr)
+        {
+            if (obj2 == obj1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        if (obj2 == nullptr)
+        {
+            if (obj1 == obj2)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        if (obj1->data != obj2->data)
+        {
+            return false;
+        }
+        return cmp(obj1->left, obj2->left) && cmp(obj1->right, obj2->right);
+    }
 
 public:
   void clear(Node* ptr)
