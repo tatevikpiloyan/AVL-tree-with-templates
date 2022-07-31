@@ -162,13 +162,46 @@ public:
     ptr = nullptr;
   }
    
-   int get_number_of_nodes(const Node* ptr)
+   static int get_number_of_nodes(const Node* ptr)
     {
         if (ptr == nullptr)
         {
             return 0;
         }
         return 1 + get_number_of_nodes(ptr->left) + get_number_of_nodes(ptr->right);
+    }
+    
+    void preorder(const Node* node)
+    {
+        if (node == nullptr)
+        {
+            return;
+        }
+        std::cout << node->data << ' ';
+        preorder(node->left);
+        preorder(node->right);
+    }
+    
+    void inorder(const Node* node)
+    {
+        if (node == nullptr)
+        {
+            return;
+        }
+        inorder(node->left);
+        std::cout << node->data << ' ';
+        inorder(node->right);
+    }
+    
+    void postorder(const Node* node)
+    {
+        if (node == nullptr)
+        {
+            return;
+        }
+        postorder(node->left);
+        postorder(node->right);
+        std::cout << node->data << ' ';
     }
 
     T get_root_data()
