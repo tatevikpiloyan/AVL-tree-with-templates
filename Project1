@@ -49,12 +49,20 @@ public:
 public:
   AVL& operator=(const AVL& node)
     {
+        if (root != nullptr)
+        {
+            clear(root);
+        }
         root = deep_copy(node.root);
         return *this;
     }
 
     AVL& operator=(AVL&& node)
     {
+        if (root != nullptr)
+        {
+            clear(root);
+        }
         root = node.root;
         node.root = nullptr;
         return *this;
