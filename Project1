@@ -217,4 +217,25 @@ public:
         }
         return 1 + ((get_height(node->left) > get_height(node->right)) ? get_height(node->left) : get_height(node->right));
     }
+    
+    bool contains(const Node* node, T data)
+    {
+        if (node == nullptr)
+        {
+            return false;
+        }
+        if (node->data == data)
+        {
+            return true;
+        }
+        else if (node->data > data)
+        {
+            return contains(node->left, data);
+        }
+        else if (node->data < data)
+        {
+            return contains(node->right, data);
+        }
+        return 0;
+    }
 };
