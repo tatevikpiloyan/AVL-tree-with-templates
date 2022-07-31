@@ -144,5 +144,28 @@ public:
     clear(ptr->right);
     delete ptr;
     ptr = nullptr;
-   }
+  }
+   
+   int get_number_of_nodes(const Node* ptr)
+    {
+        if (ptr == nullptr)
+        {
+            return 0;
+        }
+        return 1 + get_number_of_nodes(ptr->left) + get_number_of_nodes(ptr->right);
+    }
+
+    T get_root_data()
+    {
+        return root->data;
+    }
+
+    int get_height(const Node* node)
+    {
+        if (node == nullptr)
+        {
+            return 0;
+        }
+        return 1 + ((get_height(node->left) > get_height(node->right)) ? get_height(node->left) : get_height(node->right));
+    }
 };
