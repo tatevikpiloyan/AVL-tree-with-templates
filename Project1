@@ -75,12 +75,20 @@ public:
     }
 
     friend bool operator==(const AVL& obj1, const AVL& obj2)
-    {
+    {   
+        if (get_number_of_nodes(obj1.root != get_number_of_nodes(obj2.root)))
+        {
+            return false;
+        }   
         return cmp(obj1.root, obj2.root);
     }
 
     friend bool operator!=(const AVL& obj1, const AVL& obj2)
-    {
+    {   
+        if (get_number_of_nodes(obj1.root != get_number_of_nodes(obj2.root)))
+        {
+            return true;
+        }  
         return !(obj1 == obj2);
     }
   
