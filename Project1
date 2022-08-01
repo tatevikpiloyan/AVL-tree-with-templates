@@ -172,7 +172,7 @@ private:
         }
         return 1 + ((node_height(node->left) > node_height(node->right)) ? node_height(node->left) : node_height(node->right));
     }
-    bool contains_helper(const Node* node, T data)
+    bool contains_helper(const Node<T>* node, T data)
     {
         if (node == nullptr)
         {
@@ -282,7 +282,7 @@ public:
         {
             return 0;
         }
-        return tree_height(root);
+        return node_height(root);
     }
     
     bool contains(T data)
