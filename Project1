@@ -13,7 +13,7 @@ public:
     Node* right;
     Node* parent;
     int balfact;
-    Node() : left(nullptr), right(nullptr), parent(nullptr) {}
+    Node(T elem) : data(elem), left(nullptr), right(nullptr), parent(nullptr) {}
   };
   
 private:
@@ -51,7 +51,7 @@ public:
   {
     if(root != nullptr)
     {
-      clear(root);
+      clear_helper(root);
     }
   }
   
@@ -143,27 +143,73 @@ private:
         }
         return cmp(obj1->left, obj2->left) && cmp(obj1->right, obj2->right);
     }
-
-public:
-  void clear(Node<T>* ptr)
-  {
-    if (ptr == nullptr)
-    {
-      return;
-    }
-    clear(ptr->left);
-    clear(ptr->right);
-    delete ptr;
-    ptr = nullptr;
-  }
-   
-   int get_number_of_nodes(const Node<T>* ptr)
+    
+    void clear_helper(Node<T>* ptr)
     {
         if (ptr == nullptr)
+        {
+            return;
+        }
+        clear_helper(ptr->left);
+        clear_helper(ptr->right);
+        delete ptr;
+        ptr = nullptr;
+    }
+    
+    int nodes_number(const Node<T>* ptr)
+    {
+        if(ptr == nullptr)
         {
             return 0;
         }
         return 1 + get_number_of_nodes(ptr->left) + get_number_of_nodes(ptr->right);
+    }
+    
+    int node_height(const Node<T>* node)
+    {
+        if (node == nullptr)
+        {
+            return 0;
+        }
+        return 1 + ((node_height(node->left) > node_height(node->right)) ? node_height(node->left) : node_height(node->right));
+    }
+    bool contains_helper(const Node* node, T data)
+    {
+        if (node == nullptr)
+        {
+            return false;
+        }
+        if (node->data == data)
+        {
+            return true;
+        }
+        else if (node->data > data)
+        {
+            return contains_helper(node->left, data);
+        }
+        else if (node->data < data)
+        {
+            return contains_helper(node->right, data);
+        }
+    }
+    
+public:
+    void clear()
+    {
+        if (root == nullptr)
+        {
+            return;
+        }
+        clear_helper(root);
+    }
+   
+    int get_number_of_nodes()
+    {
+        if (root == nullptr)
+        {   
+            return 0;
+        }
+        return nodes_number(root);
     }
     
     void preorder(const Node<T>* node)
@@ -204,33 +250,21 @@ public:
         return root->data;
     }
 
-    int get_height(const Node<T>* node)
+    int get_height()
     {
-        if (node == nullptr)
+        if (root == nullptr)
         {
             return 0;
         }
-        return 1 + ((get_height(node->left) > get_height(node->right)) ? get_height(node->left) : get_height(node->right));
+        return tree_height(root);
     }
     
-    bool contains(const Node<T>* node, T data)
+    bool contains(T data)
     {
-        if (node == nullptr)
+        if (root == nullptr)
         {
             return false;
         }
-        if (node->data == data)
-        {
-            return true;
-        }
-        else if (node->data > data)
-        {
-            return contains(node->left, data);
-        }
-        else if (node->data < data)
-        {
-            return contains(node->right, data);
-        }
-        return 0;
+        return contains_helper(root, data);
     }
 };
