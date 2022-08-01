@@ -25,7 +25,7 @@ public:
   AVL(T data)
     {
         root = new Node<T>;
-        this->data = data;
+        root->data = data;
     }
   
   AVL(std::initializer_list<T> elem)
