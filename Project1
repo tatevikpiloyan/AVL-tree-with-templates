@@ -86,13 +86,13 @@ public:
 
     friend std::ostream& operator<<(std::ostream& os, const AVL& obj)
     {
-        print(os, obj.root);
+        obj.print(os, obj.root);
         return os;
     }
 
     friend bool operator==(const AVL& obj1, const AVL& obj2)
     {   
-        if (get_number_of_nodes(obj1.root) != get_number_of_nodes(obj2.root))
+        if (obj1.get_number_of_nodes(obj1.root) != obj2.get_number_of_nodes(obj2.root))
         {
             return false;
         }   
