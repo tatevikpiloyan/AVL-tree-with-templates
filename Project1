@@ -57,9 +57,9 @@ public:
 public:
   AVL& operator=(const AVL& node)
     {
-        if (root == node.root)
+        if (this == &node)
         {
-            return this;
+            return *this;
         }
         if (root != nullptr)
         {
@@ -71,9 +71,9 @@ public:
 
     AVL& operator=(AVL&& node)
     {
-        if (root == node.root)
+        if (this == &node)
         {
-            return this;
+            return *this;
         }
         if (root != nullptr)
         {
