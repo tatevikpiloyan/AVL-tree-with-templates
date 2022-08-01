@@ -253,15 +253,13 @@ public:
         preorder_helper(root);
     }
     
-    void inorder(const Node<T>* node)
+    void inorder()
     {
-        if (node == nullptr)
+        if (root == nullptr)
         {
             return;
         }
-        inorder(node->left);
-        std::cout << node->data << ' ';
-        inorder(node->right);
+        inorder_helper(root);
     }
     
     void postorder()
