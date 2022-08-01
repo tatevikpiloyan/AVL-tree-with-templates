@@ -5,6 +5,7 @@ template <typename T>
 class AVL
 {
 public:
+  template<typename>
   struct Node
   {
     T data;
@@ -12,18 +13,26 @@ public:
     Node* right;
     Node* parent;
     int balfact;
+    Node() : left(nullptr), right(nullptr), parent(nullptr) {}
   };
   
-  Node* root;
+private:
+  Node<T>* root;
 
 public:
   AVL() : root(nullptr) {}
+  
+  AVL(T data)
+    {
+        root = new Node<T>;
+        this->data = data;
+    }
   
   AVL(std::initializer_list<T> elem)
   {
     for (auto init : elem)
     {
-      insert(root, init);
+      insert(init);
     }
   }
   
@@ -49,6 +58,10 @@ public:
 public:
   AVL& operator=(const AVL& node)
     {
+        if (root == node.root)
+        {
+            return this;
+        }
         if (root != nullptr)
         {
             clear(root);
@@ -59,6 +72,10 @@ public:
 
     AVL& operator=(AVL&& node)
     {
+        if (root == node.root)
+        {
+            return this;
+        }
         if (root != nullptr)
         {
             clear(root);
@@ -76,7 +93,7 @@ public:
 
     friend bool operator==(const AVL& obj1, const AVL& obj2)
     {   
-        if (get_number_of_nodes(obj1.root != get_number_of_nodes(obj2.root)))
+        if (get_number_of_nodes(obj1.root) != get_number_of_nodes(obj2.root))
         {
             return false;
         }   
@@ -85,62 +102,40 @@ public:
 
     friend bool operator!=(const AVL& obj1, const AVL& obj2)
     {   
-        if (get_number_of_nodes(obj1.root != get_number_of_nodes(obj2.root)))
-        {
-            return true;
-        }  
         return !(obj1 == obj2);
     }
   
 private:
-  Node* deep_copy(Node* node_ptr)
+  Node* deep_copy(Node<T>* node_ptr)
   {
-    Node* ptr = nullptr;
+    Node<T>* ptr = nullptr;
     if (node_ptr == nullptr)
     {
       return ptr;
     }
-    ptr = new Node();
+    ptr = new Node<T>();
     ptr->data = node_ptr->data;
     ptr->left = deep_copy(node_ptr->left);
     ptr->right = deep_copy(node_ptr->right);
     return ptr;
   }
   
-  static void print(std::ostream& os, const Node* root)
+  void print(std::ostream& os, const Node<T>* root)
     {
         if (root == nullptr)
         {
             return;
         }
-        os << root->data << ' ';
         print(os, root->left);
+        os << root->data << ' ';
         print(os, root->right);
     }
     
-    static bool cmp(const Node* obj1, const Node* obj2)
+    bool cmp(const Node<T>* obj1, const Node<T>* obj2)
     {
-        if (obj1 == nullptr)
+        if (obj1 == nullptr && obj2 == nullptr)
         {
-            if (obj2 == obj1)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        if (obj2 == nullptr)
-        {
-            if (obj1 == obj2)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return true;
         }
         if (obj1->data != obj2->data)
         {
@@ -150,7 +145,7 @@ private:
     }
 
 public:
-  void clear(Node* ptr)
+  void clear(Node<T>* ptr)
   {
     if (ptr == nullptr)
     {
@@ -162,7 +157,7 @@ public:
     ptr = nullptr;
   }
    
-   static int get_number_of_nodes(const Node* ptr)
+   int get_number_of_nodes(const Node<T>* ptr)
     {
         if (ptr == nullptr)
         {
@@ -171,7 +166,7 @@ public:
         return 1 + get_number_of_nodes(ptr->left) + get_number_of_nodes(ptr->right);
     }
     
-    void preorder(const Node* node)
+    void preorder(const Node<T>* node)
     {
         if (node == nullptr)
         {
@@ -182,7 +177,7 @@ public:
         preorder(node->right);
     }
     
-    void inorder(const Node* node)
+    void inorder(const Node<T>* node)
     {
         if (node == nullptr)
         {
@@ -193,7 +188,7 @@ public:
         inorder(node->right);
     }
     
-    void postorder(const Node* node)
+    void postorder(const Node<T>* node)
     {
         if (node == nullptr)
         {
@@ -209,7 +204,7 @@ public:
         return root->data;
     }
 
-    int get_height(const Node* node)
+    int get_height(const Node<T>* node)
     {
         if (node == nullptr)
         {
@@ -218,7 +213,7 @@ public:
         return 1 + ((get_height(node->left) > get_height(node->right)) ? get_height(node->left) : get_height(node->right));
     }
     
-    bool contains(const Node* node, T data)
+    bool contains(const Node<T>* node, T data)
     {
         if (node == nullptr)
         {
