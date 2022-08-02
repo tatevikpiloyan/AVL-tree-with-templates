@@ -288,6 +288,22 @@ private:
         }
     }
     
+    void merge_helper(Node<T>*& obj1, const Node<T>* obj2)
+    {   
+        if (obj2 == nullptr)
+        {   
+            return;
+        }
+        if (obj1 == nullptr)
+        {   
+            obj1 = new Node<T>(obj2->data);
+        }
+        merge_helper(obj1, obj2->left);
+        insert_helper(obj1, obj2->data);
+        merge_helper(obj1, obj2->right);
+        insert_helper(obj1, obj2->data);
+    }
+    
 public:
 
     void insert(T data)
@@ -311,6 +327,15 @@ public:
             return 0;
         }
         return node_height(root);
+    }
+    
+    void merge(const AVL& obj)
+    {
+        if (this == &obj)
+        {
+            return;
+        }
+        merge_helper(root, obj.root);
     }
    
     int get_number_of_nodes() const
