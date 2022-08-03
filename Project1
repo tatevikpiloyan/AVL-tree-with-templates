@@ -111,7 +111,7 @@ private:
         Node<T>* ptr = nullptr;
         if (node_ptr == nullptr)
         {
-            return tmp;
+            return ptr;
         }
         ptr = new Node<T>();
         ptr->data = node_ptr->data;
