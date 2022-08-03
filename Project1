@@ -310,40 +310,68 @@ private:
     
     Node<T>* left_rotate(Node<T>*& node)
     {   
-        if (node->right->left == nullptr)
-        {   
-            node->parent = node->right;
-            node->right->parent = nullptr;
-            node->right->left = node;
-            node->right = nullptr;
+        if (node->parent == nullptr)
+        {
+            Node<T>* tmp = node->right;
+            node->right = tmp->left;
+            tmp->left = node;
+            node->parent = tmp;
+            tmp->parent = nullptr;
+            return tmp;
         }
-        else
-        {   
-            node->parent = node->right;
-            node->right->parent = nullptr;
-            node->right = node->parent->left;
-            node->parent->left = node;
+        else if (node == node->parent->left)
+        {
+            Node<T>* tmp = node->right;
+            node->parent->left = tmp;
+            tmp->parent = node->parent;
+            node->right = tmp->left;
+            tmp->left = node;
+            node->parent = tmp;
+            return tmp;
         }
-        return node->parent;
+        else if (node == node->parent->right)
+        {
+            Node<T>* tmp = node->right;
+            node->parent->right - tmp;
+            tmp->parent = node->parent;
+            node->right = tmp->left;
+            tmp->left = node;
+            node->parent = tmp;
+            return tmp;
+        }
     }
 
-    Node<T>* right_rotate(Node<T>*& node)
+    Node<T>* right_rotate(Node<T>* node)
     {   
-        if (node->left->right == nullptr)
+        if (node->parent == nullptr)
         {   
-            node->parent = node->left;
-            node->left->parent = nullptr;
-            node->left->right = node;
-            node->left = nullptr;
+            Node<T>* tmp = node->left;
+            node->left = tmp->right;
+            tmp->right = node;
+            node->parent = tmp;
+            tmp->parent = nullptr;
+            return tmp;
+        }
+        else if (node == node->parent->left)
+        {   
+            Node<T>* tmp = node->left;
+            node->parent->left = tmp;
+            tmp->parent = node->parent;
+            node->left = tmp->right;
+            tmp->right = node;
+            node->parent = tmp;
+            return tmp;
         }
         else
         {   
-            node->parent = node->left;
-            node->left->parent = nullptr;
-            node->left = node->parent->right;
-            node->parent->right = node;
+            Node<T>* tmp = node->left;
+            node->parent->right = tmp;
+            tmp->parent = node->parent;
+            node->left = tmp->right;
+            tmp->right = node;
+            node->parent = tmp;
+            return tmp;
         }
-        return node->parent;
     }
 
     Node<T>* right_left_rotate(Node<T>*& node)
