@@ -370,7 +370,7 @@ private:
             return;
         }
         int tmp = get_balfactor(node);
-        if (tmp > 1 && tmp > 0)
+        if (tmp > 1 && get_balfactor(node->left) > 0)
         {   
             node = right_rotate(node);
         }
@@ -378,7 +378,7 @@ private:
         {   
             node = left_right_rotate(node);
         }
-        if (tmp < -1 && tmp < 0)
+        if (tmp < -1 && get_balfactor(node->right) < 0)
         {   
             node = left_rotate(node);
         }
