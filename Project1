@@ -12,12 +12,11 @@ public:
         Node* left;
         Node* right;
         Node* parent;
-        int balfactor;
         Node() : left(nullptr), right(nullptr), parent(nullptr) {}
         Node(T elem) : data(elem), left(nullptr), right(nullptr), parent(nullptr) {}
     };
 
-
+private:
     Node<T>* root;
 
 public:
@@ -272,7 +271,7 @@ private:
         {
             ptr = new Node<T>(data);
         }
-        if (ptr->data == data)
+        else if (ptr->data == data)
         {
             return;
         }
@@ -285,6 +284,11 @@ private:
         {
             insert_helper(ptr->right, data);
             ptr->right->parent = ptr;
+        }
+        int tmp = get_balfactor(ptr->parent);
+        if (tmp > 1 || tmp < -1)
+        {
+            balance_helper(ptr->parent);
         }
     }
     
@@ -342,19 +346,23 @@ private:
         return node->parent;
     }
     
-    
+    int get_balfactor(const Node<T>* ptr)
+    {
+        if (ptr == nullptr)
+        {
+            return 0;
+        }
+        return node_height(ptr->left) - node_height(ptr->right);
+    }
     
     void balance_helper(Node<T>*& node)
     {
         if (node == nullptr)
-        {   
-            return;
-        }
-        else
         {
             return;
         }
-        if (node->balfactor > 1 && node->left->balfactor > 0)
+        int tmp = get_balfactor(node);
+        if (tmp > 1 && tmp > 0)
         {
             node = left_rotate(node);
         }
@@ -362,7 +370,7 @@ private:
         {
             node = left_right_rotate(node);
         }
-        if (node->balfactor < 1 && node->right->balfactor < 0)
+        if (tmp < 1 && tmp < 0)
         {
             node = right_rotate(node);
         }
@@ -397,6 +405,16 @@ public:
     void right_left_rotate()
     {
         root = right_left_rotate_help(root);
+    }
+    
+    bool get_balance()
+    {
+        int tmp = get_balfactor(root);
+        if (tmp > 1 || tmp < -1 )
+        {
+            return false;
+        }
+        return true;
     }
     
     void clear()
