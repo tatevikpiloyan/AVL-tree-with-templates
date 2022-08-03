@@ -342,6 +342,36 @@ private:
         return node->parent;
     }
     
+    
+    
+    void balance_helper(Node<T>*& node)
+    {
+        if (node == nullptr)
+        {   
+            return;
+        }
+        else
+        {
+            return;
+        }
+        if (node->balfactor > 1 && node->left->balfactor > 0)
+        {
+            node = left_rotate(node);
+        }
+        else
+        {
+            node = left_right_rotate(node);
+        }
+        if (node->balfactor < 1 && node->right->balfactor < 0)
+        {
+            node = right_rotate(node);
+        }
+        else
+        {
+            node = right_left_rotate(node);
+        }
+    }
+    
 public:
 
     void insert(T data)
@@ -357,6 +387,16 @@ public:
     void right_rotate()
     {
         root = right_rotate_help(root);
+    }
+    
+    void left_right_rotate()
+    {   
+        root = left_right_rotate_help(root);
+    }
+    
+    void right_left_rotate()
+    {
+        root = right_left_rotate_help(root);
     }
     
     void clear()
