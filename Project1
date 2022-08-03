@@ -364,28 +364,34 @@ private:
     }
     
     void balance_helper(Node<T>*& node)
-    {   
+    {
         if (node == nullptr)
-        {   
+        {
             return;
         }
         int tmp = get_balfactor(node);
-        if (tmp > 1 && get_balfactor(node->left) > 0)
-        {   
-            node = right_rotate(node);
+        if (tmp > 1)
+        {
+            if (get_balfactor(node->left) > 0)
+            {   
+                node = right_rotate(node);
+            }
+            else
+            {
+                node = left_right_rotate(node);
+            }
         }
-        else
-        {   
-            node = left_right_rotate(node);
-        }
-        if (tmp < -1 && get_balfactor(node->right) < 0)
-        {   
-            node = left_rotate(node);
-        }
-        else
-        {   
-            node = right_left_rotate(node);
-        }
+        if (tmp < -1)
+        {
+            if (get_balfactor(node->right)< 0)
+            {
+                node = left_rotate(node);
+            }
+            else
+            {
+                node = right_left_rotate(node);
+            }
+        }   
     }
     
 public:
