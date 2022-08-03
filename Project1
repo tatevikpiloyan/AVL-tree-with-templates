@@ -374,12 +374,16 @@ private:
         }
     }
 
-    Node<T>* right_left_rotate(Node<T>*& node)
+    Node<T>* right_left_rotate(Node<T>* node)
     {
+        node->right = right_rotate(node->right);
+        node = left_rotate(node);
     }
 
-    Node<T>* left_right_rotate(Node<T>*& node)
+    Node<T>* left_right_rotate(Node<T>* node)
     {
+        node->left = left_rotate(node->left);
+        node = right_rotate(node);
     }
     
     int get_balfactor(const Node<T>* ptr)
