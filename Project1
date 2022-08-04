@@ -16,7 +16,7 @@ public:
         Node(T elem) : data(elem), left(nullptr), right(nullptr), parent(nullptr) {}
     };
 
-private:
+
     Node<T>* root;
 
 public:
@@ -26,20 +26,21 @@ public:
     {
         root = new Node<T>(data);
     }
-  
-    AVL(std::initializer_list<T> elem)
-    {
-        for(auto init : elem)
-        {
-            insert(init);
-        }
-    }
-  
+
     AVL(const AVL& node)
     {
         root = deep_copy(node.root);
     }
-  
+
+    AVL(std::initializer_list<T> elem)
+    {
+        for (T init : elem)
+        {
+            insert(init);
+
+        }
+    }
+
     AVL(AVL&& node)
     {
         root = node.root;
@@ -53,7 +54,7 @@ public:
             clear_helper(root);
         }
     }
-  
+
 public:
     AVL& operator=(const AVL& node)
     {
@@ -64,6 +65,7 @@ public:
         if (root != nullptr)
         {
             clear_helper(root);
+            root = nullptr;
         }
         root = deep_copy(node.root);
         return *this;
@@ -71,13 +73,10 @@ public:
 
     AVL& operator=(AVL&& node)
     {
-        if (this == &node)
-        {
-            return *this;
-        }
         if (root != nullptr)
         {
             clear_helper(root);
+            root = nullptr;
         }
         root = node.root;
         node.root = nullptr;
@@ -103,22 +102,21 @@ public:
     {
         return !(obj1 == obj2);
     }
-  
+
 private:
     Node<T>* deep_copy(Node<T>* node_ptr)
     {
-        Node<T>* ptr = nullptr;
+        Node<T>* tmp = nullptr;
         if (node_ptr == nullptr)
         {
-            return ptr;
+            return tmp;
         }
-        ptr = new Node<T>();
-        ptr->data = node_ptr->data;
-        ptr->left = deep_copy(node_ptr->left);
-        ptr->right = deep_copy(node_ptr->right);
-        return ptr;
+        tmp = new Node<T>(node_ptr->data);
+        tmp->left = deep_copy(node_ptr->left);
+        tmp->right = deep_copy(node_ptr->right);
+        return tmp;
     }
-  
+
     void print(std::ostream& os, const Node<T>* root) const
     {
         if (root == nullptr)
@@ -129,7 +127,7 @@ private:
         os << root->data << ' ';
         print(os, root->right);
     }
-    
+
     bool cmp(const Node<T>* obj1, const Node<T>* obj2) const
     {
         if (obj1 == nullptr && obj2 == nullptr)
@@ -154,7 +152,7 @@ private:
         delete ptr;
         ptr = nullptr;
     }
-    
+
     int nodes_number(const Node<T>* ptr) const
     {
         if (ptr == nullptr)
@@ -163,7 +161,7 @@ private:
         }
         return 1 + nodes_number(ptr->left) + nodes_number(ptr->right);
     }
-    
+
     int node_height(const Node<T>* node) const
     {
         if (node == nullptr)
@@ -172,7 +170,7 @@ private:
         }
         return 1 + ((node_height(node->left) > node_height(node->right)) ? node_height(node->left) : node_height(node->right));
     }
-    
+
     bool contains_helper(const Node<T>* node, T data) const
     {
         if (node == nullptr)
@@ -191,41 +189,42 @@ private:
         {
             return contains_helper(node->right, data);
         }
+        return false;
     }
     
     void preorder_helper(const Node<T>* node)
     {
         if (node == nullptr)
-        {   
+        {
             return;
         }
         std::cout << node->data << ' ';
         preorder_helper(node->left);
         preorder_helper(node->right);
     }
-    
+
     void inorder_helper(const Node<T>* node)
     {
         if (node == nullptr)
-        {   
+        {
             return;
         }
         inorder_helper(node->left);
         std::cout << node->data << ' ';
         inorder_helper(node->right);
     }
-    
+
     void postorder_helper(const Node<T>* node)
     {
         if (node == nullptr)
-        {   
+        {
             return;
         }
         postorder_helper(node->left);
         postorder_helper(node->right);
         std::cout << node->data << ' ';
     }
-    
+
     void levelorder_helper(const Node<T>* node)
     {
         if (node == nullptr)
@@ -252,7 +251,7 @@ private:
         }
         if (root->data == data)
         {
-            return &root->data;
+            return &root;
         }
         else if (root->data > data)
         {
@@ -270,8 +269,9 @@ private:
         if (ptr == nullptr)
         {
             ptr = new Node<T>(data);
+            return;
         }
-        else if (ptr->data == data)
+        if (ptr->data == data)
         {
             return;
         }
@@ -293,13 +293,13 @@ private:
     }
     
     void merge_helper(Node<T>*& obj1, const Node<T>* obj2)
-    {   
+    {
         if (obj2 == nullptr)
-        {   
+        {
             return;
         }
         if (obj1 == nullptr)
-        {   
+        {
             obj1 = new Node<T>(obj2->data);
         }
         merge_helper(obj1, obj2->left);
@@ -307,85 +307,79 @@ private:
         merge_helper(obj1, obj2->right);
         insert_helper(obj1, obj2->data);
     }
-    
-    Node<T>* left_rotate(Node<T>*& node)
-    {   
+
+    Node<T>* left_rotate(Node<T>* node)
+    {
+        Node<T>* tmp = node->right;
         if (node->parent == nullptr)
         {
-            Node<T>* tmp = node->right;
             node->right = tmp->left;
             tmp->left = node;
             node->parent = tmp;
             tmp->parent = nullptr;
-            return tmp;
         }
         else if (node == node->parent->left)
         {
-            Node<T>* tmp = node->right;
             node->parent->left = tmp;
             tmp->parent = node->parent;
             node->right = tmp->left;
             tmp->left = node;
             node->parent = tmp;
-            return tmp;
         }
         else if (node == node->parent->right)
         {
-            Node<T>* tmp = node->right;
-            node->parent->right - tmp;
+            node->parent->right = tmp;
             tmp->parent = node->parent;
             node->right = tmp->left;
             tmp->left = node;
             node->parent = tmp;
-            return tmp;
         }
+        return tmp;
     }
 
     Node<T>* right_rotate(Node<T>* node)
-    {   
+    {
+        Node<T>* tmp = node->left;
         if (node->parent == nullptr)
-        {   
-            Node<T>* tmp = node->left;
+        {
             node->left = tmp->right;
             tmp->right = node;
             node->parent = tmp;
             tmp->parent = nullptr;
-            return tmp;
         }
         else if (node == node->parent->left)
-        {   
-            Node<T>* tmp = node->left;
+        {
             node->parent->left = tmp;
             tmp->parent = node->parent;
             node->left = tmp->right;
             tmp->right = node;
             node->parent = tmp;
-            return tmp;
         }
         else
-        {   
-            Node<T>* tmp = node->left;
+        {
             node->parent->right = tmp;
             tmp->parent = node->parent;
             node->left = tmp->right;
             tmp->right = node;
             node->parent = tmp;
-            return tmp;
         }
+        return tmp;
     }
 
     Node<T>* right_left_rotate(Node<T>* node)
     {
         node->right = right_rotate(node->right);
         node = left_rotate(node);
+        return node;
     }
 
     Node<T>* left_right_rotate(Node<T>* node)
     {
         node->left = left_rotate(node->left);
         node = right_rotate(node);
+        return node;
     }
-    
+
     int get_balfactor(const Node<T>* ptr)
     {
         if (ptr == nullptr)
@@ -404,8 +398,8 @@ private:
         int tmp = get_balfactor(node);
         if (tmp > 1)
         {
-            if (get_balfactor(node->left) > 0)
-            {   
+            if (get_balfactor(node->left) >= 0)
+            {
                 node = right_rotate(node);
             }
             else
@@ -415,7 +409,7 @@ private:
         }
         if (tmp < -1)
         {
-            if (get_balfactor(node->right)< 0)
+            if (get_balfactor(node->right) <= 0)
             {
                 node = left_rotate(node);
             }
@@ -423,16 +417,15 @@ private:
             {
                 node = right_left_rotate(node);
             }
-        }   
+        }
     }
     
 public:
-
     void insert(T data)
     {
         insert_helper(root, data);
     }
-    
+
     bool get_balance()
     {
         int tmp = get_balfactor(root);
@@ -442,7 +435,7 @@ public:
         }
         return true;
     }
-    
+
     void clear()
     {
         if (root == nullptr)
@@ -451,25 +444,7 @@ public:
         }
         clear_helper(root);
     }
-    
-    int get_height()
-    {
-        if (root == nullptr)
-        {
-            return 0;
-        }
-        return node_height(root);
-    }
-    
-    void merge(const AVL& obj)
-    {
-        if (this == &obj)
-        {
-            return;
-        }
-        merge_helper(root, obj.root);
-    }
-   
+
     int get_number_of_nodes() const
     {
         if (root == nullptr)
@@ -478,14 +453,23 @@ public:
         }
         return nodes_number(root);
     }
-    
+
     void preorder()
     {
         if (root == nullptr)
-        {   
+        {
             return;
         }
         preorder_helper(root);
+    }
+
+    void postorder()
+    {
+        if (root == nullptr)
+        {
+            return;
+        }
+        postorder_helper(root);
     }
     
     void inorder()
@@ -496,16 +480,7 @@ public:
         }
         inorder_helper(root);
     }
-    
-    void postorder()
-    {
-        if (root == nullptr)
-        {
-            return;
-        }
-        postorder_helper(root);
-    }
-    
+
     void levelorder()
     {
         if (root == nullptr)
@@ -520,6 +495,30 @@ public:
     {
         return root->data;
     }
+
+    int get_height()
+    {
+        if (root == nullptr)
+        {
+            return 0;
+        }
+        return node_height(root);
+    }
+
+    void erase(T data)
+    {
+        Node<T>* tmp = find_helper(root, data);
+        erase_helper(tmp, data);
+    }
+
+    void merge(const AVL& obj)
+    {
+        if (this == &obj)
+        {
+            return;
+        }
+        merge_helper(root, obj.root);
+    }
     
     bool contains(T data)
     {
@@ -530,11 +529,11 @@ public:
         return contains_helper(root, data);
     }
 
-    T* find(T data) const
+    Node<T>* find(T data) const
     {
         if (root->data == data)
         {
-            return &root->data;
+            return &root;
         }
         return find_helper(root, data);
     }
