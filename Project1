@@ -244,7 +244,7 @@ private:
         levelorder_helper(node->right);
     }
     
-    T* find_helper(Node<T>* root, T data) const
+    Node<T>* find_helper(Node<T>* root, T data) const
     {
         if (root == nullptr)
         {
